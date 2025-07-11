@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหารหัสพนักงาน</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 20px 0;
+      width: 100%;
+      text-align: center;
+    }
+    main {
+      padding: 30px 20px;
+      max-width: 600px;
+      width: 100%;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .result {
+      margin-top: 30px;
+    }
+    .card {
+      background-color: white;
+      border-left: 5px solid #003366;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>🔍 ค้นหารหัสพนักงาน</h2>
+    <p>กรอกชื่อหรือนามสกุลของคุณ</p>
+  </header>
+  <main>
+    <input type="text" id="searchInput" placeholder="พิมพ์ชื่อหรือนามสกุล" onkeyup="searchEmployee()">
+    <div class="result" id="result"></div>
+  </main>
+
+  <script>
+    let employees = [];
+
+    async function loadData() {
+      const res = await fetch('employees_data_cleaned.json');
+      employees = await res.json();
+    }
+
+    function searchEmployee() {
+      const input = document.getElementById("searchInput").value.trim();
+      const resultDiv = document.getElementById("result");
+      if (!input) {
+        resultDiv.innerHTML = "";
+        return;
+      }
+      const filtered = employees.filter(emp =>
+        emp.FIRSTNAME.includes(input) || emp.LASTNAME.includes(input)
+      );
+      if (filtered.length > 0) {
+        resultDiv.innerHTML = filtered.map(emp =>
+          `<div class="card">
+            <p>👤 <strong>${emp.FIRSTNAME} ${emp.LASTNAME}</strong></p>
+            <p>🆔 รหัสพนักงาน: <strong>${emp.EMPLID}</strong></p>
+          </div>`
+        ).join("");
+      } else {
+        resultDiv.innerHTML = "<p>ไม่พบข้อมูล</p>";
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
