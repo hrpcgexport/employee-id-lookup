@@ -1,25 +1,55 @@
-<script>
-  let employeeData = [];
-
-  fetch('Check_Rmployee_ID.json')
-    .then(response => response.json())
-    .then(data => {
-      employeeData = data;
-    });
-
-  function cleanId(id) {
-    return id.replace(/"/g, '').replace(/\\/g, '');
-  }
-
-  function searchEmployee() {
-    const input = document.getElementById("search").value.trim();
-    const result = employeeData.find(emp => cleanId(emp.employeeId) === input);
-
-    const resultBox = document.getElementById("result");
-    if (result) {
-      resultBox.innerHTML = `รหัส: ${cleanId(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
-    } else {
-      resultBox.innerHTML = "ไม่พบข้อมูล";
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหารหัสพนักงาน (ธีมฟ้า)</title>
+  <style>
+    body {
+      background-color: #e8f0fe;
+      font-family: sans-serif;
+      padding: 30px;
+      text-align: center;
     }
-  }
-</script>
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔍 ค้นหารหัสพนักงาน</h2>
+  <input type="text" id="search" placeholder="กรอกรหัสพนักงาน">
+  <button onclick="searchEmployee()">ค้นหา</button>
+  <div id="result"></div>
+
+  <script>
+    let employeeData = [];
+
+    fetch('Check_Rmployee_ID.json')
+      .then(response => response.json())
+      .then(data => {
+        employeeData = data;
+      });
+
+    function cleanId(id) {
+      return id.replace(/"/g, '').replace(/\\/g, '');
+    }
+
+    function searchEmployee() {
+      const input = document.getElementById("search").value.trim();
+      const result = employeeData.find(emp => cleanId(emp.employeeId) === input);
+
+      const resultBox = document.getElementById("result");
+      if (result) {
+        resultBox.innerHTML = `รหัส: ${cleanId(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+      } else {
+        resultBox.innerHTML = "ไม่พบข้อมูล";
+      }
+    }
+  </script>
+</body>
+</html>
