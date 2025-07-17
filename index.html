@@ -4,12 +4,32 @@
   <meta charset="UTF-8">
   <title>ค้นหารหัสพนักงาน</title>
   <style>
-    body { background-color: #003366; color: white; font-family: 'Tahoma', sans-serif; text-align: center; padding: 50px; }
-    input { padding: 15px; width: 350px; font-size: 18px; border-radius: 8px; }
-    button { padding: 15px; font-size: 16px; margin-left: 10px; border-radius: 8px; }
+    body {
+      background-color: #003366;
+      color: white;
+      font-family: 'Tahoma', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input {
+      padding: 15px;
+      width: 350px;
+      font-size: 18px;
+      border-radius: 8px;
+    }
+    button {
+      padding: 15px;
+      font-size: 16px;
+      margin-left: 10px;
+      border-radius: 8px;
+    }
     .employee-card {
-      background-color: #ffffff20; margin: 20px auto; padding: 15px;
-      border-radius: 10px; width: 600px; text-align: left;
+      background-color: #ffffff20;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      width: 600px;
+      text-align: left;
     }
   </style>
 </head>
@@ -22,7 +42,7 @@
   <script>
     let employeeData = [];
 
-    fetch('Check_Employee_ID.json') // ต้องตรงกับชื่อไฟล์!
+    fetch('Check_Employee_ID_from_CSV.json') // ชื่อไฟล์ JSON ใหม่
       .then(response => response.json())
       .then(data => { employeeData = data; });
 
@@ -34,11 +54,12 @@
       const input = clean(document.getElementById("search").value);
       const resultBox = document.getElementById("result");
       resultBox.innerHTML = '';
+
       if (!input) return;
 
       const matches = employeeData.filter(emp => {
-        const first = clean(emp.firstName);
-        const last = clean(emp.lastName);
+        const first = clean(emp.firstName || emp['first name'] || "");
+        const last = clean(emp.lastName || emp['last name'] || "");
         const full = `${first} ${last}`;
         return first.includes(input) || last.includes(input) || full.includes(input);
       });
@@ -47,11 +68,11 @@
         matches.forEach(result => {
           resultBox.innerHTML += `
             <div class="employee-card">
-              <div><b>รหัสพนักงาน:</b> ${clean(result.employeeId)}</div>
-              <div><b>ชื่อ-นามสกุล:</b> ${clean(result.firstName)} ${clean(result.lastName)}</div>
-              <div><b>ตำแหน่ง:</b> ${result["POSITION DESCRIPTION"]}</div>
-              <div><b>แผนก:</b> ${result.Department}</div>
-              <div><b>Plant:</b> ${result["Plant"]}</div>
+              <div><b>รหัสพนักงาน:</b> ${result.employeeId || result.รหัสพนักงาน || ""}</div>
+              <div><b>ชื่อ-นามสกุล:</b> ${result.firstName || result['first name'] || ""} ${result.lastName || result['last name'] || ""}</div>
+              <div><b>ตำแหน่ง:</b> ${result["POSITION DESCRIPTION"] || result["ตำแหน่ง"] || ""}</div>
+              <div><b>แผนก:</b> ${result.Department || result["แผนก"] || ""}</div>
+              <div><b>Plant:</b> ${result.Plant || result["Plant "] || ""}</div>
             </div>
           `;
         });
