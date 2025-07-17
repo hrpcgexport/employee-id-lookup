@@ -11,26 +11,25 @@
     return id.replace(/["\\]/g, '').trim();
   }
 
-  function searchEmployee() {
-    const input = document.getElementById("search").value.trim();
-    const resultBox = document.getElementById("result");
+function searchEmployee() {
+  const input = document.getElementById("search").value.trim().toLowerCase();
+  const resultBox = document.getElementById("result");
 
-    const result = employeeData.find(emp => {
-      const id = cleanId(emp.employeeId);
-      const fullName = `${emp.firstName} ${emp.lastName}`;
-      return id === input || fullName.includes(input);
-    });
+  const result = employeeData.find(emp => {
+    const id = cleanId(emp.employeeId);
+    const fullName = `${emp.firstName} ${emp.lastName}`;
+    return id === input || fullName.toLowerCase().includes(input);
+  });
 
-    if (result) {
-      resultBox.innerHTML = `
-        <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
-        <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
-        <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
-        <div>แผนก: ${result.Department}</div>
-        <div>Plant: ${result["Plant "]}</div>
-      `;
-    } else {
-      resultBox.innerHTML = "❌ ไม่พบข้อมูล";
-    }
+  if (result) {
+    resultBox.innerHTML = `
+      <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
+      <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
+      <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
+      <div>แผนก: ${result.Department}</div>
+      <div>Plant: ${result["Plant "]}</div>
+    `;
+  } else {
+    resultBox.innerHTML = "❌ ไม่พบข้อมูล";
   }
-</script>
+}
