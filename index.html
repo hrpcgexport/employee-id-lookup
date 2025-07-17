@@ -71,7 +71,7 @@
           resultBox.innerHTML += `
             <div class="employee-card">
               <div><b>รหัสพนักงาน:</b> ${clean(result.employeeId)}</div>
-              <div><b>ชื่อ-นามสกุล:</b> ${result.firstName} ${result.lastName}</div>
+              <div><b>ชื่อ-นามสกุล:</b> ${clean(result.firstName)} ${clean(result.lastName)}</div>
               <div><b>ตำแหน่ง:</b> ${result["POSITION DESCRIPTION"]}</div>
               <div><b>แผนก:</b> ${result.Department}</div>
               <div><b>Plant:</b> ${result["Plant "]}</div>
