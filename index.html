@@ -4,32 +4,12 @@
   <meta charset="UTF-8">
   <title>ค้นหารหัสพนักงาน</title>
   <style>
-    body {
-      background-color: #003366;
-      color: white;
-      font-family: 'Tahoma', sans-serif;
-      text-align: center;
-      padding: 50px;
-    }
-    input {
-      padding: 15px;
-      width: 350px;
-      font-size: 18px;
-      border-radius: 8px;
-    }
-    button {
-      padding: 15px;
-      font-size: 16px;
-      margin-left: 10px;
-      border-radius: 8px;
-    }
+    body { background-color: #003366; color: white; font-family: 'Tahoma', sans-serif; text-align: center; padding: 50px; }
+    input { padding: 15px; width: 350px; font-size: 18px; border-radius: 8px; }
+    button { padding: 15px; font-size: 16px; margin-left: 10px; border-radius: 8px; }
     .employee-card {
-      background-color: #ffffff20;
-      margin: 20px auto;
-      padding: 15px;
-      border-radius: 10px;
-      width: 600px;
-      text-align: left;
+      background-color: #ffffff20; margin: 20px auto; padding: 15px;
+      border-radius: 10px; width: 600px; text-align: left;
     }
   </style>
 </head>
@@ -42,11 +22,9 @@
   <script>
     let employeeData = [];
 
-    fetch('Check_Rmployee_ID.json')
+    fetch('Check_Employee_ID.json') // ต้องตรงกับชื่อไฟล์!
       .then(response => response.json())
-      .then(data => {
-        employeeData = data;
-      });
+      .then(data => { employeeData = data; });
 
     function clean(text) {
       return text?.replace(/["\\]/g, '').trim().toLowerCase();
@@ -56,7 +34,6 @@
       const input = clean(document.getElementById("search").value);
       const resultBox = document.getElementById("result");
       resultBox.innerHTML = '';
-
       if (!input) return;
 
       const matches = employeeData.filter(emp => {
