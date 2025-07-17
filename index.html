@@ -3,12 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <title>ค้นหารหัสพนักงาน</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #003366;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 10px;
+      background-color: #ffffff;
+      color: #003366;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card {
+      background-color: #ffffff;
+      color: #003366;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
   <h2>ค้นหารหัสพนักงาน</h2>
-  <input type="text" id="search" placeholder="กรอกรหัสพนักงานหรือชื่อ">
-  <button onclick="searchEmployee()">ค้นหา</button>
-  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+  <input type="text" id="search" placeholder="กรอกชื่อหรือนามสกุล" oninput="searchEmployee()">
+  <button onclick="clearSearch()">Clear</button>
+
+  <div id="result"></div>
 
   <script>
     let employeeData = [];
@@ -19,31 +60,42 @@
         employeeData = data;
       });
 
-    function cleanId(id) {
-      return id.replace(/["\\]/g, '').trim();
+    function cleanText(text) {
+      return text.replace(/"/g, '').replace(/\\/g, '').trim();
     }
 
     function searchEmployee() {
       const input = document.getElementById("search").value.trim().toLowerCase();
       const resultBox = document.getElementById("result");
+      resultBox.innerHTML = '';
 
-      const result = employeeData.find(emp => {
-        const id = cleanId(emp.employeeId);
-        const fullName = `${emp.firstName} ${emp.lastName}`;
-        return id === input || fullName.toLowerCase().includes(input);
-      });
+      if (input === "") return;
 
-      if (result) {
-        resultBox.innerHTML = `
-          <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
-          <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
-          <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
-          <div>แผนก: ${result.Department}</div>
-          <div>Plant: ${result["Plant "]}</div>
-        `;
+      const matches = employeeData.filter(emp =>
+        cleanText(emp.firstName).toLowerCase().includes(input) ||
+        cleanText(emp.lastName).toLowerCase().includes(input)
+      );
+
+      if (matches.length > 0) {
+        matches.forEach(emp => {
+          resultBox.innerHTML += `
+            <div class="card">
+              <strong>รหัสพนักงาน:</strong> ${cleanText(emp.employeeId)}<br>
+              <strong>ชื่อ-นามสกุล:</strong> ${emp.firstName} ${emp.lastName}<br>
+              <strong>ตำแหน่ง:</strong> ${emp["POSITION DESCRIPTION"]}<br>
+              <strong>หน่วยงาน:</strong> ${emp.Department}<br>
+              <strong>สถานะ:</strong> ${emp.Status}
+            </div>
+          `;
+        });
       } else {
-        resultBox.innerHTML = "❌ ไม่พบข้อมูล";
+        resultBox.innerHTML = "<p>ไม่พบข้อมูล</p>";
       }
+    }
+
+    function clearSearch() {
+      document.getElementById("search").value = "";
+      document.getElementById("result").innerHTML = "";
     }
   </script>
 </body>
