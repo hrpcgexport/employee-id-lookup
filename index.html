@@ -42,7 +42,7 @@
   <script>
     let employeeData = [];
 
-    fetch('Check_Employee_ID_from_CSV.json') // ชื่อไฟล์ JSON ใหม่
+       fetch('Check_Employee_ID.json') // ✅ ใช้ชื่อใหม่นี้
       .then(response => response.json())
       .then(data => { employeeData = data; });
 
