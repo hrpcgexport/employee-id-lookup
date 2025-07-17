@@ -2,53 +2,67 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ค้นหารหัสพนักงาน (ธีมฟ้า)</title>
+  <title>ค้นหารหัสพนักงาน</title>
   <style>
-    body {
-      background-color: #e8f0fe;
-      font-family: sans-serif;
-      padding: 30px;
-      text-align: center;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-    }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
+    body { background-color: #003366; color: white; font-family: 'Tahoma', sans-serif; text-align: center; padding: 50px; }
+    input { padding: 15px; width: 350px; font-size: 18px; border-radius: 8px; }
+    button { padding: 15px; font-size: 16px; margin-left: 10px; border-radius: 8px; }
+    .employee-card {
+      background-color: #ffffff20; margin: 20px auto; padding: 15px;
+      border-radius: 10px; width: 600px; text-align: left;
     }
   </style>
 </head>
 <body>
-  <h2>🔍 ค้นหารหัสพนักงาน</h2>
-  <input type="text" id="search" placeholder="กรอกรหัสพนักงาน">
-  <button onclick="searchEmployee()">ค้นหา</button>
+  <h2>ค้นหารหัสพนักงาน</h2>
+  <input type="text" id="search" placeholder="พิมพ์ชื่อหรือนามสกุล" oninput="searchEmployee()">
+  <button onclick="clearSearch()">Clear</button>
   <div id="result"></div>
 
   <script>
     let employeeData = [];
 
-    fetch('Check_Rmployee_ID.json')
+    fetch('Check_Employee_ID.json') // ต้องตรงกับชื่อไฟล์!
       .then(response => response.json())
-      .then(data => {
-        employeeData = data;
-      });
+      .then(data => { employeeData = data; });
 
-    function cleanId(id) {
-      return id.replace(/"/g, '').replace(/\\/g, '');
+    function clean(text) {
+      return text?.replace(/["\\]/g, '').trim().toLowerCase();
     }
 
     function searchEmployee() {
-      const input = document.getElementById("search").value.trim();
-      const result = employeeData.find(emp => cleanId(emp.employeeId) === input);
-
+      const input = clean(document.getElementById("search").value);
       const resultBox = document.getElementById("result");
-      if (result) {
-        resultBox.innerHTML = `รหัส: ${cleanId(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+      resultBox.innerHTML = '';
+      if (!input) return;
+
+      const matches = employeeData.filter(emp => {
+        const first = clean(emp.firstName);
+        const last = clean(emp.lastName);
+        const full = `${first} ${last}`;
+        return first.includes(input) || last.includes(input) || full.includes(input);
+      });
+
+      if (matches.length > 0) {
+        matches.forEach(result => {
+          resultBox.innerHTML += `
+            <div class="employee-card">
+              <div><b>รหัสพนักงาน:</b> ${clean(result.employeeId)}</div>
+              <div><b>ชื่อ-นามสกุล:</b> ${clean(result.firstName)} ${clean(result.lastName)}</div>
+              <div><b>ตำแหน่ง:</b> ${result["POSITION DESCRIPTION"]}</div>
+              <div><b>แผนก:</b> ${result.Department}</div>
+              <div><b>Plant:</b> ${result["Plant "]}</div>
+            </div>
+          `;
+        });
       } else {
-        resultBox.innerHTML = "ไม่พบข้อมูล";
+        resultBox.innerHTML = "<p style='color: pink'>❌ ไม่พบข้อมูล</p>";
       }
+    }
+
+    function clearSearch() {
+      document.getElementById("search").value = '';
+      document.getElementById("result").innerHTML = '';
     }
   </script>
 </body>
