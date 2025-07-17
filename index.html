@@ -1,38 +1,30 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <title>ค้นหาชื่อพนักงาน</title>
-</head>
-<body>
-  <h2>ค้นหาชื่อพนักงาน</h2>
-  <input type="text" id="search" placeholder="กรอกชื่อหรือนามสกุล">
-  <button onclick="searchEmployee()">ค้นหา</button>
-  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+<script>
+  let employeeData = [];
 
-  <script>
-    let employeeData = [];
+  fetch('Check_Rmployee_ID.json')
+    .then(response => response.json())
+    .then(data => {
+      employeeData = data;
+    });
 
-    fetch('Check_Rmployee_ID.json')
-      .then(response => response.json())
-      .then(data => {
-        employeeData = data;
-      });
+  function cleanString(str) {
+    return str.replace(/["\\]/g, '').trim(); // ล้าง " และ \
+  }
 
-    function cleanId(id) {
-      return id.replace(/\\/g, '').replace(/"/g, '');
+  function searchEmployee() {
+    const input = document.getElementById("search").value.trim();
+    const resultBox = document.getElementById("result");
+
+    const result = employeeData.find(emp =>
+      cleanString(emp.employeeId) === input ||
+      cleanString(emp.firstName).includes(input) ||
+      cleanString(emp.lastName).includes(input)
+    );
+
+    if (result) {
+      resultBox.innerHTML = `รหัส: ${cleanString(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+    } else {
+      resultBox.innerHTML = "ไม่พบข้อมูล";
     }
-
-    function searchEmployee() {
-      const input = document.getElementById("search").value.trim().toLowerCase();
-
-      const results = employeeData.filter(emp => {
-        const fullName = `${emp.firstName} ${emp.lastName}`.toLowerCase();
-        return emp.firstName.toLowerCase().includes(input) ||
-               emp.lastName.toLowerCase().includes(input) ||
-               fullName.includes(input);
-      });
-
-      const resultBox = document.getElementById("result");
-      if (results.length > 0) {
-        resultBox.innerHTML = re
+  }
+</script>
