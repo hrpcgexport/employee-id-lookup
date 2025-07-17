@@ -6,7 +6,7 @@
 </head>
 <body>
   <h2>ค้นหารหัสพนักงาน</h2>
-  <input type="text" id="search" placeholder="กรอกรหัสพนักงาน">
+  <input type="text" id="search" placeholder="กรอกรหัสพนักงาน 7 หลัก เช่น 0000002">
   <button onclick="searchEmployee()">ค้นหา</button>
   <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
 
@@ -19,17 +19,13 @@
         employeeData = data;
       });
 
-    function cleanId(id) {
-      return id.replace(/"/g, '').replace(/\\/g, '');
-    }
-
     function searchEmployee() {
       const input = document.getElementById("search").value.trim();
-      const result = employeeData.find(emp => cleanId(emp.employeeId) === input);
+      const result = employeeData.find(emp => emp.employeeId === input);
 
       const resultBox = document.getElementById("result");
       if (result) {
-        resultBox.innerHTML = `รหัส: ${cleanId(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+        resultBox.innerHTML = `รหัส: ${result.employeeId}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
       } else {
         resultBox.innerHTML = "ไม่พบข้อมูล";
       }
