@@ -48,7 +48,7 @@
 
     // ✅ debounce function
     let debounceTimer;
-    function debounce(func, delay = 300) {
+    function debounce(func, delay = 100) {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(func, delay);
     }
