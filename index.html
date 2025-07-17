@@ -1,18 +1,39 @@
-<script>
-  let employeeData = [];
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหารหัสพนักงาน</title>
+</head>
+<body>
+  <h2>ค้นหารหัสพนักงาน</h2>
+  <input type="text" id="search" placeholder="กรอกรหัสพนักงาน">
+  <button onclick="searchEmployee()">ค้นหา</button>
+  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
 
-  fetch('Check_Rmployee_ID.json')
-    .then(response => response.json())
-    .then(data => {
-      employeeData = data;
-    });
+  <script>
+    let employeeData = [];
 
-  function searchEmployee() {
-    const input = document.getElementById("search").value.trim();
-    const result = employeeData.find(emp => 
-      emp.employeeId.replace(/"/g, '').replace(/\\/g, '') === input
-    );
+    fetch('Check_Rmployee_ID.json')
+      .then(response => response.json())
+      .then(data => {
+        employeeData = data;
+      });
 
-    const resultBox = document.getElementById("result");
-    if (result) {
-      resultBox.innerHTML = `รหัส: ${result.employeeId.repl
+    function cleanId(id) {
+      return id.replace(/"/g, '').replace(/\\/g, '');
+    }
+
+    function searchEmployee() {
+      const input = document.getElementById("search").value.trim();
+      const result = employeeData.find(emp => cleanId(emp.employeeId) === input);
+
+      const resultBox = document.getElementById("result");
+      if (result) {
+        resultBox.innerHTML = `รหัส: ${cleanId(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+      } else {
+        resultBox.innerHTML = "ไม่พบข้อมูล";
+      }
+    }
+  </script>
+</body>
+</html>
