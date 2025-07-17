@@ -5,98 +5,51 @@
   <title>ค้นหารหัสพนักงาน</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background-color: #003366;
-      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4faff;
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #005c99;
       text-align: center;
-      padding: 50px;
     }
     input {
+      width: 100%;
       padding: 10px;
+      margin-top: 10px;
       font-size: 16px;
-      width: 300px;
-      border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-    button {
-      padding: 10px 15px;
-      font-size: 16px;
-      margin-left: 10px;
-      background-color: #ffffff;
-      color: #003366;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 30px;
-      text-align: left;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    .result-box {
+      margin-top: 20px;
     }
     .card {
-      background-color: #ffffff;
-      color: #003366;
+      background-color: #e6f2ff;
       padding: 15px;
-      border-radius: 10px;
       margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .not-found {
+      color: red;
+      font-weight: bold;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h2>ค้นหารหัสพนักงาน</h2>
-  <input type="text" id="search" placeholder="กรอกชื่อหรือนามสกุล" oninput="searchEmployee()">
-  <button onclick="clearSearch()">Clear</button>
+  <h2>🔍 ค้นหารหัสพนักงาน</h2>
+  <input type="text" id="search" placeholder="พิมพ์ชื่อ / นามสกุล / รหัสพนักงาน">
 
-  <div id="result"></div>
+  <div id="result" class="result-box"></div>
 
   <script>
     let employeeData = [];
 
-    fetch('Check_Rmployee_ID.json')
+    fetch('https://raw.githubusercontent.com/hrpcgexport/employee-id-lookup/main/Check_Rmployee_ID.json')
       .then(response => response.json())
       .then(data => {
         employeeData = data;
-      });
-
-    function cleanText(text) {
-      return text.replace(/"/g, '').replace(/\\/g, '').trim();
-    }
-
-    function searchEmployee() {
-      const input = document.getElementById("search").value.trim().toLowerCase();
-      const resultBox = document.getElementById("result");
-      resultBox.innerHTML = '';
-
-      if (input === "") return;
-
-      const matches = employeeData.filter(emp =>
-        cleanText(emp.firstName).toLowerCase().includes(input) ||
-        cleanText(emp.lastName).toLowerCase().includes(input)
-      );
-
-      if (matches.length > 0) {
-        matches.forEach(emp => {
-          resultBox.innerHTML += `
-            <div class="card">
-              <strong>รหัสพนักงาน:</strong> ${cleanText(emp.employeeId)}<br>
-              <strong>ชื่อ-นามสกุล:</strong> ${emp.firstName} ${emp.lastName}<br>
-              <strong>ตำแหน่ง:</strong> ${emp["POSITION DESCRIPTION"]}<br>
-              <strong>หน่วยงาน:</strong> ${emp.Department}<br>
-              <strong>สถานะ:</strong> ${emp.Status}
-            </div>
-          `;
-        });
-      } else {
-        resultBox.innerHTML = "<p>ไม่พบข้อมูล</p>";
-      }
-    }
-
-    function clearSearch() {
-      document.getElementById("search").value = "";
-      document.getElementById("result").innerHTML = "";
-    }
-  </script>
-</body>
-</html>
