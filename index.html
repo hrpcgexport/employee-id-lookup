@@ -35,16 +35,23 @@
 </head>
 <body>
   <h2>ค้นหารหัสพนักงาน</h2>
-  <input type="text" id="search" placeholder="พิมพ์ชื่อหรือนามสกุล" oninput="searchEmployee()">
+  <input type="text" id="search" placeholder="พิมพ์ชื่อหรือนามสกุล" oninput="debounce(searchEmployee)">
   <button onclick="clearSearch()">Clear</button>
   <div id="result"></div>
 
   <script>
     let employeeData = [];
 
-       fetch('Check_Employee_ID.json') // ✅ ใช้ชื่อใหม่นี้
+    fetch('Check_Employee_ID.json')
       .then(response => response.json())
       .then(data => { employeeData = data; });
+
+    // ✅ debounce function
+    let debounceTimer;
+    function debounce(func, delay = 300) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(func, delay);
+    }
 
     function clean(text) {
       return text?.replace(/["\\]/g, '').trim().toLowerCase();
