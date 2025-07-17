@@ -7,24 +7,30 @@
       employeeData = data;
     });
 
-  function cleanString(str) {
-    return str.replace(/["\\]/g, '').trim(); // ล้าง " และ \
+  function cleanId(id) {
+    return id.replace(/["\\]/g, '').trim();
   }
 
   function searchEmployee() {
     const input = document.getElementById("search").value.trim();
     const resultBox = document.getElementById("result");
 
-    const result = employeeData.find(emp =>
-      cleanString(emp.employeeId) === input ||
-      cleanString(emp.firstName).includes(input) ||
-      cleanString(emp.lastName).includes(input)
-    );
+    const result = employeeData.find(emp => {
+      const id = cleanId(emp.employeeId);
+      const fullName = `${emp.firstName} ${emp.lastName}`;
+      return id === input || fullName.includes(input);
+    });
 
     if (result) {
-      resultBox.innerHTML = `รหัส: ${cleanString(result.employeeId)}<br>ชื่อ: ${result.firstName} ${result.lastName}`;
+      resultBox.innerHTML = `
+        <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
+        <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
+        <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
+        <div>แผนก: ${result.Department}</div>
+        <div>Plant: ${result["Plant "]}</div>
+      `;
     } else {
-      resultBox.innerHTML = "ไม่พบข้อมูล";
+      resultBox.innerHTML = "❌ ไม่พบข้อมูล";
     }
   }
 </script>
