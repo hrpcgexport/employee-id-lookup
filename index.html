@@ -1,35 +1,50 @@
-<script>
-  let employeeData = [];
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหารหัสพนักงาน</title>
+</head>
+<body>
+  <h2>ค้นหารหัสพนักงาน</h2>
+  <input type="text" id="search" placeholder="กรอกรหัสพนักงานหรือชื่อ">
+  <button onclick="searchEmployee()">ค้นหา</button>
+  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
 
-  fetch('Check_Rmployee_ID.json')
-    .then(response => response.json())
-    .then(data => {
-      employeeData = data;
-    });
+  <script>
+    let employeeData = [];
 
-  function cleanId(id) {
-    return id.replace(/["\\]/g, '').trim();
-  }
+    fetch('Check_Rmployee_ID.json')
+      .then(response => response.json())
+      .then(data => {
+        employeeData = data;
+      });
 
-function searchEmployee() {
-  const input = document.getElementById("search").value.trim().toLowerCase();
-  const resultBox = document.getElementById("result");
+    function cleanId(id) {
+      return id.replace(/["\\]/g, '').trim();
+    }
 
-  const result = employeeData.find(emp => {
-    const id = cleanId(emp.employeeId);
-    const fullName = `${emp.firstName} ${emp.lastName}`;
-    return id === input || fullName.toLowerCase().includes(input);
-  });
+    function searchEmployee() {
+      const input = document.getElementById("search").value.trim().toLowerCase();
+      const resultBox = document.getElementById("result");
 
-  if (result) {
-    resultBox.innerHTML = `
-      <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
-      <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
-      <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
-      <div>แผนก: ${result.Department}</div>
-      <div>Plant: ${result["Plant "]}</div>
-    `;
-  } else {
-    resultBox.innerHTML = "❌ ไม่พบข้อมูล";
-  }
-}
+      const result = employeeData.find(emp => {
+        const id = cleanId(emp.employeeId);
+        const fullName = `${emp.firstName} ${emp.lastName}`;
+        return id === input || fullName.toLowerCase().includes(input);
+      });
+
+      if (result) {
+        resultBox.innerHTML = `
+          <div>รหัสพนักงาน: ${cleanId(result.employeeId)}</div>
+          <div>ชื่อ-นามสกุล: ${result.firstName} ${result.lastName}</div>
+          <div>ตำแหน่ง: ${result["POSITION DESCRIPTION"]}</div>
+          <div>แผนก: ${result.Department}</div>
+          <div>Plant: ${result["Plant "]}</div>
+        `;
+      } else {
+        resultBox.innerHTML = "❌ ไม่พบข้อมูล";
+      }
+    }
+  </script>
+</body>
+</html>
